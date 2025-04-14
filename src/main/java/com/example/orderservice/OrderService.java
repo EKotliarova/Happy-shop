@@ -24,6 +24,7 @@ public class OrderService {
         if (order.getType() == null) {
             return Mono.error(new RuntimeException("Order type is required"));
         }
+
         switch (order.getType()) {
             case "flower":
                 if (order.getBouquetName() == null || order.getBouquetName().isEmpty()) {
@@ -35,9 +36,9 @@ public class OrderService {
                     return Mono.error(new RuntimeException("Gift wrap option must be specified for gift orders"));
                 }
                 break;
-            case "set":
-                if (order.getSetItems() == null || order.getSetItems().isEmpty()) {
-                    return Mono.error(new RuntimeException("Set items are required for gift set orders"));
+            case "toy":
+                if (order.getToyName() == null || order.getToyName().isEmpty()) {
+                    return Mono.error(new RuntimeException("Set items are required for toy orders"));
                 }
                 break;
             default:
@@ -82,7 +83,7 @@ public class OrderService {
                 + order.getId() + ", '" + order.getType() + "', "
                 + (order.getBouquetName() != null ? ("'" + order.getBouquetName() + "'") : "NULL") + ", "
                 + (order.getGiftWrap() != null ? order.getGiftWrap().toString() : "NULL") + ", "
-                + (order.getSetItems() != null ? ("'" + order.getSetItems() + "'") : "NULL") + ", "
+                + (order.getToyName() != null ? ("'" + order.getToyName() + "'") : "NULL") + ", "
                 + "'" + order.getStatus() + "', " + order.getPrice() + ")";
 
         return databaseClient.sql(sql)
@@ -99,8 +100,8 @@ public class OrderService {
                     o.setId(row.get("id", Long.class));
                     o.setType(row.get("type", String.class));
                     o.setBouquetName(row.get("bouquet_name", String.class));
+                    o.setToyName(row.get("toy_name", String.class));
                     o.setGiftWrap(row.get("gift_wrap", Boolean.class));
-                    o.setSetItems(row.get("set_items", String.class));
                     o.setStatus(row.get("status", String.class));
                     o.setPrice(row.get("price", Double.class));
                     return o;

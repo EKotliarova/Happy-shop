@@ -5,8 +5,8 @@ public class Order {
     private String type;
     private String status;
     private String bouquetName;
+    private String toyName;
     private Boolean giftWrap;
-    private String setItems;
     private Double price;
 
     public Order() {
@@ -47,17 +47,18 @@ public class Order {
         this.giftWrap = giftWrap;
     }
 
-    public String getSetItems() {
-        return setItems;
-    }
-    public void setSetItems(String setItems) {
-        this.setItems = setItems;
-    }
-
     public Double getPrice() {
         return price;
     }
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public String getToyName() {
+        return toyName;
+    }
+
+    public void setToyName(String toyName) {
+        this.toyName = toyName;
     }
 }
