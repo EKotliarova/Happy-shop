@@ -1,5 +1,6 @@
 package com.example.orderservice;
 
+import io.micrometer.tracing.annotation.NewSpan;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -79,6 +80,12 @@ public class OrderService {
 
         order.setStatus("Not completed");
 
+        return saveOrder(order);
+    }
+
+    @NewSpan
+    private Mono<Order> saveOrder(Order order) {
+
         String sql = "INSERT INTO orders (id, type, bouquet_name, gift_wrap, set_items, status, price) VALUES ("
                 + order.getId() + ", '" + order.getType() + "', "
                 + (order.getBouquetName() != null ? ("'" + order.getBouquetName() + "'") : "NULL") + ", "
@@ -92,6 +99,7 @@ public class OrderService {
                 .map(count -> order);
     }
 
+    @NewSpan
     public Mono<Order> getOrder(Long id) {
         String sql = "SELECT * FROM orders WHERE id = " + id;
         return databaseClient.sql(sql)
@@ -109,6 +117,7 @@ public class OrderService {
                 .one();
     }
 
+    @NewSpan
     public Mono<Order> markOrderAsCompleted(Long id) {
         String sql = "UPDATE orders SET status = 'Completed' WHERE id = " + id;
         return databaseClient.sql(sql)
